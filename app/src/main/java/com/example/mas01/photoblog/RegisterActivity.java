@@ -41,7 +41,14 @@ public class RegisterActivity extends AppCompatActivity {
         reg_btn = (Button) findViewById(R.id.reg_btn);
         reg_login_btn = (Button) findViewById(R.id.reg_login_btn);
         reg_progress = (ProgressBar) findViewById(R.id.reg_progress);
+        reg_login_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
+                finish();
+
+            }
+        });
         reg_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -59,7 +66,9 @@ public class RegisterActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if(task.isSuccessful()) {
-                                    sendToMain();
+                                    Intent setupIntent = new Intent(RegisterActivity.this, SetupActivity.class);
+                                    startActivity(setupIntent);
+                                    finish();
                                 } else {
                                     String errorMessage = task.getException().getMessage();
                                     Toast.makeText(RegisterActivity.this, "Error." + errorMessage, Toast.LENGTH_LONG).show();
