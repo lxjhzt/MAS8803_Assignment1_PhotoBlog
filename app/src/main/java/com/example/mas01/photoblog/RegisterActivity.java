@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,8 +45,9 @@ public class RegisterActivity extends AppCompatActivity {
         reg_login_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent regIntent = new Intent( LoginActivity.this, RegisterActivity.class);
+                Intent regIntent = new Intent (LoginActivity.this, RegisterActivity.class);
                 startActivity(regIntent);
+
             }
         });
 
