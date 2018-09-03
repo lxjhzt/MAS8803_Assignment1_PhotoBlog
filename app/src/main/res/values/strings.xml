@@ -1,8 +1,15 @@
 <resources>
     <string name="app_name">PhotoBlog</string>
-    <string name="pass_hint" >Enter Your Password</string>
-    <string name="email_hint" >Enter Your Email</string>
+    <string name="pass_hint">Enter Your Password</string>
+    <string name="email_hint">Enter Your Email</string>
     <string name="login_logo" />
     <string name="login_button_hint">Login to Account</string>
     <string name="Register_Button">Need a new Account?</string>
+    <string name="action_search_text">Search</string>
+    <string name="account_setting_text">Account Settings</string>
+    <string name="action_logout_text">Logout</string>
+    <string name="reg_btn_text">Create new Account</string>
+    <string name="reg_login_text">Already have an Account?</string>
+    <string name="reg_confirm_password_text">Confirm your password</string>
+    <string name="reg_confirm_pass_text">Confirm your password</string>
 </resources>
