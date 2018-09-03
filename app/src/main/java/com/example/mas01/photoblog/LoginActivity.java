@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText loginEmailText;
@@ -33,19 +36,11 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        loginEmailText = (EditText) findViewById(R.id.reg_email);
-        loginPassText = (EditText) findViewById(R.id.reg_password);
+        loginEmailText = (EditText) findViewById(R.id.LoginEmail);
+        loginPassText = (EditText) findViewById(R.id.LoginPassword);
         loginBtn = (Button) findViewById(R.id.LoginButton);
         loginRegBtn = (Button) findViewById(R.id.LoginSecond);
         loginProgress = (ProgressBar) findViewById(R.id.login_progress);
-
-        loginRegBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent regIntent = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(regIntent);
-            }
-        });
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
