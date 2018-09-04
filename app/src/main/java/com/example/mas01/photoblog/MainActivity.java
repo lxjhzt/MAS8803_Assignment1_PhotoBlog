@@ -46,13 +46,27 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         switch (item.getItemId()) {
+
             case R.id.action_logout_btn:
                 logOut();
                 return true;
-                default:
-                    return false;
+
+            case R.id.action_settings_btn:
+
+                Intent settingsIntent = new Intent(MainActivity.this, SetupActivity.class);
+                startActivity(settingsIntent);
+
+                return true;
+
+
+            default:
+                return false;
+
+
         }
+
     }
 
     private void logOut() {

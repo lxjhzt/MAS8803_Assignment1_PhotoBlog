@@ -21,8 +21,36 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 import de.hdodenhof.circleimageview.CircleImageView;
 
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
+
 public class SetupActivity extends AppCompatActivity {
     private CircleImageView setupImage;
+    private Uri mainImageURI = null;
+
+    private EditText setupName;
+    private Button setupBtn;
+    private StorageReference storageReference;
+    private FirebaseAuth firebaseAuth;
+    private ProgressBar setupProgress;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,7 +61,48 @@ public class SetupActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Account Setup");
 
 
+        firebaseAuth = FirebaseAuth.getInstance();
+        storageReference = FirebaseStorage.getInstance().getReference();
+
         setupImage = findViewById(R.id.setup_image);
+        setupName = findViewById(R.id.setup_name);
+        setupBtn = findViewById(R.id.setup_btn);
+        setupProgress = findViewById(R.id.setup_progress);
+
+        setupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                String user_name = setupName.getText().toString();
+
+                if(!TextUtils.isEmpty(user_name) && mainImageURI != null) {
+
+                    String user_id = firebaseAuth.getCurrentUser().getUid();
+
+                    StorageReference image_path = storageReference.child("profile_images").child(user_id + ".jpg");
+                    image_path.putFile(mainImageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+
+                            if(task.isSuccessful()) {
+
+                                Uri download_uri = task.getResult().getDownloadUrl();
+                                Toast.makeText(SetupActivity.this, "The image is uploaded", Toast.LENGTH_LONG).show();
+
+                            } else {
+                                String error = task.getException().getMessage();
+                                Toast.makeText(SetupActivity.this, "Error : " + error, Toast.LENGTH_LONG).show();
+                            }
+
+                            setupProgress.setVisibility(View.INVISIBLE);
+                        }
+                    });
+                }
+            }
+
+        });
+
+
+
         setupImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,8 +116,10 @@ public class SetupActivity extends AppCompatActivity {
 
                     } else {
 
-                        Toast.makeText(SetupActivity.this, "You already have Permission", Toast.LENGTH_LONG).show();
-
+                        CropImage.activity()
+                                .setGuidelines(CropImageView.Guidelines.ON)
+                                .setAspectRatio(1, 1)
+                                .start(SetupActivity.this);
                     }
 
                 }
@@ -57,6 +128,19 @@ public class SetupActivity extends AppCompatActivity {
 
         });
 
+    }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            CropImage.ActivityResult result = CropImage.getActivityResult(data);
+            if (resultCode == RESULT_OK) {
+                mainImageURI  = result.getUri();
+                setupImage.setImageURI(mainImageURI);
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                Exception error = result.getError();
+            }
+        }
     }
 }
